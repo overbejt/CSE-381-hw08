@@ -1,10 +1,10 @@
 /* 
+ *  Copyright (C) 2018 raodm@miamiOH.edu
+ * 
  * A multithreaded client to test operations of a Banking web-server.
  *
  * This program generates concurrent requests to the Banking
  * web-server to test its operations.
- *
- * Copyright (C) 2018 raodm@miamiOH.edu
  */
 
 #include <boost/asio.hpp>
