@@ -30,11 +30,17 @@ std::unordered_map<std::string, double> bank;
 
 
 // Forward declaration for method defined further below
-std::string url_decode(std::string);
+void createAcct(std::string acctNum);
+void credit(std::string acctNum, double ammount);
+void debit(std::string acctNum, double ammount);
+void reset();
+std::string status(std::string acctNum);
 void response(std::ostream& os, std::string account, bool err);
+std::string url_decode(std::string);
+
 
 /**
- * A helper method for printing the header.
+ * This is a method that will printing the header.
  * 
  * @param os Ostream for output.
  * @param contentLength Length of the content.
