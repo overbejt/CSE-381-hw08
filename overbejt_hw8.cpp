@@ -29,6 +29,24 @@ using namespace boost::asio::ip;
 
 // Forward declaration for method defined further below
 std::string url_decode(std::string);
+void header(std::ostream& os, int contentLength, bool err);
+
+/**
+ * A helper method for printing the header.
+ * 
+ * @param os Ostream for output.
+ * @param contentLength Length of the content.
+ */
+void header(std::ostream& os, int contentLength, bool err) {
+    if (err) {
+        os << "HTTP/1.1 404 Not Found\r\n";
+    } else {
+        os << "HTTP/1.1 200 OK\r\n";
+    }
+    os << "Content-Type: text/plain\r\n";
+//    os << "Transfer-Encoding: chunked\r\n";
+    os << "Connection: Close\r\n";
+}  // End of the 'header' method
 
 /**
  * Top-level method to run a custom HTTP server to process bank
