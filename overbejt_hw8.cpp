@@ -72,7 +72,7 @@ void debit(std::string acctNum, double ammount) {
  * This is the method that will reset the bank.  
  */
 void reset() {
-    
+    bank.clear();
 }  // End of the 'reset' method
 
 
