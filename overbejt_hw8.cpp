@@ -34,6 +34,7 @@ void createAcct(std::ostream& os, std::string acctNum);
 void credit(std::ostream& os, std::string acctNum, double ammount);
 void debit(std::ostream& os, std::string acctNum, double ammount);
 void reset(std::ostream& os);
+// parse input method?
 void status(std::ostream& os, std::string acctNum);
 void response(std::ostream& os, std::string account, bool err);
 std::string url_decode(std::string);
@@ -123,17 +124,21 @@ void status(std::ostream& os, std::string acctNum) {
  * @param os Ostream for output.
  * @param contentLength Length of the content.
  */
-void response(std::ostream& os, std::string account, bool err) {
+void response(std::ostream& os, std::ostream& content, bool err) {
     if (err) {
         os << "HTTP/1.1 404 Not Found\r\n";
     } else {
         os << "HTTP/1.1 200 OK\r\n";
     }
     os << "Server: BankServer\r\n";
-    os << "Content-Length: " << account.size() << "\r\n";
+    // Get the content 
+    std::stringstream ss;
+    ss << content;
+    std::string contentDat = ss.str();
+    os << "Content-Length: " << contentDat.size() << "\r\n";
     os << "Connection: Close\r\n";
     os << "Content-Type: text/plain\r\n";
-    os << "Account " << account << " created";
+    os << "Account " << contentDat << " created";
 }  // End of the 'header' method
 
 /**
