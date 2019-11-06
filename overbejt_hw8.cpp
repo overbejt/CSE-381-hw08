@@ -34,7 +34,7 @@ void createAcct(std::string acctNum);
 void credit(std::string acctNum, double ammount);
 void debit(std::string acctNum, double ammount);
 void reset();
-std::string status(std::string acctNum);
+void status(std::ostream& os, std::string acctNum);
 void response(std::ostream& os, std::string account, bool err);
 std::string url_decode(std::string);
 
@@ -90,8 +90,12 @@ void reset() {
  * @param acctNum The indicated account number.
  * @return The balance of the indicated account.
  */
-std::string status(std::string acctNum) {
-    
+void status(std::ostream& os, std::string acctNum) {
+    std::string balance;
+    auto acct = bank.find(acctNum);
+    if (acct != bank.end()) {
+        os << std::fixed << std::precision(2) << std::to_string(acct->second);
+    }
 }  // End of the 'status' method
 
 
