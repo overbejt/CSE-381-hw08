@@ -44,7 +44,9 @@ std::string url_decode(std::string);
  * @param acctNum The account number for the new account.
  */
 void createAcct(std::string acctNum) {
-    
+    if (bank.find() != bank.end()) {
+        bank.push_back(acctNum);
+    }
 }  // End of the 'createAcct' method
 
 /**
