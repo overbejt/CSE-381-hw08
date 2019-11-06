@@ -126,6 +126,7 @@ void status(std::ostream& os, std::string acctNum) {
  */
 void serveClient(std::istream& is, std::ostream& os) {
     // Todo: Maybe implement this
+    std::cout << "The serveClient method was called" << std::endl;
 }  // End of the 'serveClient' method
 
 
@@ -168,21 +169,23 @@ void runServer(tcp::acceptor& server) {
     //
     // First get the base case to be operational. Then you can multithread.
     
-//    io_service service;
-////    // Create end point
-////    tcp::endpoint myEndpoint(tcp::v4(), port);
-//    // Create a socket that accepts connections
+    io_service service;
+//    // Create end point
+//    tcp::endpoint myEndpoint(tcp::v4(), port);
+    // Create a socket that accepts connections
 //    tcp::acceptor server(service, myEndpoint);
 //    std::cout << "Server is listening on port "
 //              << server.local_endpoint().port() << std::endl;
-//    // Process client connections one-by-one...forever
-//    while (true) {
-//        tcp::iostream client;
-//        // Wait for a client to connect
-//        server.accept(*client.rdbuf());
-//        // Process information from client.
-//        serveClient(client, client);
-//    }
+    std::cout << "It is running my code here" << std::endl;
+    // Process client connections one-by-one...forever
+    while (true) {
+        tcp::iostream client;
+        // Wait for a client to connect
+        server.accept(*client.rdbuf());
+        // Process information from client.
+        serveClient(client, client);
+    }
+    std::cout << "Run server method was called" << std::endl;
 }
 
 //-------------------------------------------------------------------
