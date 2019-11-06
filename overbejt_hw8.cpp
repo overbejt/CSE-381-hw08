@@ -178,13 +178,13 @@ void runServer(tcp::acceptor& server) {
 ////              << server.local_endpoint().port() << std::endl;
 //    std::cout << "It is running my code here" << std::endl;
 //    // Process client connections one-by-one...forever
-//    while (true) {
-//        tcp::iostream client;
-//        // Wait for a client to connect
-//        server.accept(*client.rdbuf());
-//        // Process information from client.
-//        serveClient(client, client);
-//    }
+    while (true) {
+        tcp::iostream client;
+        // Wait for a client to connect
+        server.accept(*client.rdbuf());
+        // Process information from client.
+        serveClient(client, client);
+    }
 //    std::cout << "Run server method was called" << std::endl;
 }
 
@@ -232,8 +232,7 @@ void checkRunClient(const std::string& port);
  * multiple threads.
  */
 int main(int argc, char** argv) {
-    // Todo: I need to wrap this in a loop and make it work!!!!
-    
+  
     // Setup the port number for use by the server
     const int port = (argc > 1 ? std::stoi(argv[1]) : 0);
     io_service service;
