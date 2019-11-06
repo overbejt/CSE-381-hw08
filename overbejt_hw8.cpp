@@ -129,26 +129,24 @@ void status(std::ostream& os, std::string acctNum) {
 void serveClient(std::istream& is, std::ostream& os) {
     // Todo: Maybe implement this
     std::cout << "The serveClient method was called" << std::endl;
-    // Read headers from client and print them. This server
-    // does not really process client headers
-    std::string line, getReq;
-    // Read the GET request line.
-    std::getline(is, getReq);
-    // Skip/ignore all the HTTP request & headers for now.
-    while (std::getline(is, line) && (line != "\r") && !line.empty()) {
+     // 1.) Make sure Input starts with "GET /cgi-bin/exec"
+    for (std::string line; getline(is, line);) {
+        if (line.find("GET") != std::string::npos) {
+            if (line.substr(0, 20) == "GET /TransactionInfo") {
+                line = line.substr(21);
+                // Print the header out
+                std::string idk = "It reached the response method";
+                response(os, idk);
+                
+            } else {
+                // Print the header out
+                std::string idk = "IDK";
+                response(os, idk);
+                // Print the error message out
+//                printErr(os, line);
+            }
+        }
     }
-    response(os, line);
-//    os << "Server: BankServer\r\n";
-//    os << "Content-Length: " << line.size() << "\r\n";
-//    os << "Connection: Close\r\n";
-//    os << "Content-Type: text/plain\r\n";
-//    os << "Account " << line << " created";
-//    std::cout << "Server: BankServer\r\n";
-//    std::cout << "Content-Length: " << line.size() << "\r\n";
-//    std::cout << "Connection: Close\r\n";
-//    std::cout << "Content-Type: text/plain\r\n";
-//    std::cout << "Account " << line << " created";
-//    std::cout << line << std::endl;
 }  // End of the 'serveClient' method
 
 
@@ -159,6 +157,12 @@ void serveClient(std::istream& is, std::ostream& os) {
  * @param contentLength Length of the content.
  */
 void response(std::ostream& os, std::string& content) {
+//    if (err) {
+//        os << "HTTP/1.1 200 OK\r\n";
+//    } else {
+//        os << "HTTP/1.1 404 "
+//    }
+    os << "HTTP/1.1 200 OK\r\n";
     os << "Server: BankServer\r\n";
     os << "Content-Length: " << content.size() << "\r\n";
     os << "Connection: Close\r\n";
