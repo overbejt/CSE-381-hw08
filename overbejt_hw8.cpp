@@ -30,10 +30,10 @@ std::unordered_map<std::string, double> bank;
 
 
 // Forward declaration for method defined further below
-void createAcct(std::string acctNum);
-void credit(std::string acctNum, double ammount);
-void debit(std::string acctNum, double ammount);
-void reset();
+void createAcct(std::ostream& os, std::string acctNum);
+void credit(std::ostream& os, std::string acctNum, double ammount);
+void debit(std::ostream& os, std::string acctNum, double ammount);
+void reset(std::ostream& os);
 void status(std::ostream& os, std::string acctNum);
 void response(std::ostream& os, std::string account, bool err);
 std::string url_decode(std::string);
@@ -43,10 +43,15 @@ std::string url_decode(std::string);
  * 
  * @param acctNum The account number for the new account.
  */
-void createAcct(std::string acctNum) {
-    if (bank.find(acctNum) != bank.end()) {
+void createAcct(std::ostream& os, std::string acctNum) {
+    std::string output;
+    if (bank.find(acctNum) == bank.end()) {
         bank.insert({acctNum, 0.0});
+        output = "Account " + acctNum + " created";
+    } else {
+        output = "Account " + acctNum + " already exists";
     }
+    os << output;
 }  // End of the 'createAcct' method
 
 /**
@@ -55,11 +60,16 @@ void createAcct(std::string acctNum) {
  * @param acctNum The account number.
  * @param ammount The amount to be added to the account.
  */
-void credit(std::string acctNum, double ammount) {
+void credit(std::ostream& os, std::string acctNum, double ammount) {
     auto acct = bank.find(acctNum);
+    std::string output;
     if (acct != bank.end()) {
         acct->second += ammount;
+        output =  "Account balance updated";
+    } else {
+        output = "Account not found";
     }
+    os << output;
 }  // End of the 'credit' method
 
 /**
@@ -68,19 +78,25 @@ void credit(std::string acctNum, double ammount) {
  * @param acctNum The account number to be debited.
  * @param ammount The amount to subtract from the account.
  */
-void debit(std::string acctNum, double ammount) {
+void debit(std::ostream& os, std::string acctNum, double ammount) {
     auto acct = bank.find(acctNum);
+    std::string output;
     if (acct != bank.end()) {
         acct->second -= ammount;
+        output = "Account balance updated";
+    } else {
+        output = "Account not found";
     }
+    os << output;
 }  // End of the 'debit' method
 
 
 /**
  * This is the method that will reset the bank.  
  */
-void reset() {
+void reset(std::ostream& os) {
     bank.clear();
+    os << "All accounts reset";
 }  // End of the 'reset' method
 
 
@@ -94,6 +110,7 @@ void status(std::ostream& os, std::string acctNum) {
     std::string balance;
     auto acct = bank.find(acctNum);
     if (acct != bank.end()) {
+        os << "Account " << acctNum;
         os << std::fixed << std::setprecision(2) 
                 << std::to_string(acct->second);
     }
