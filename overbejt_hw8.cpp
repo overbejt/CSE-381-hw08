@@ -27,6 +27,8 @@ using namespace boost::asio;
 using namespace boost::asio::ip;
 // Create a bank to make reading easier
 std::unordered_map<std::string, double> bank;
+// Using smart pointer
+using TcpStreamPtr = std::shared_ptr<tcp::iostream>;
 
 
 // Forward declaration for method defined further below
@@ -154,6 +156,15 @@ void response(std::ostream& os, std::ostream& content, bool err) {
 }  // End of the 'header' method
 
 /**
+ * This is a method that will act as the main for a thread.  
+ * 
+ * @param stream The iostream associated to the client connection
+ */
+void thrdInit(TcpStreamPtr stream) {
+    serveClient(*stream, *stream);
+}  // End of the 'thrdinit' method
+
+/**
  * Top-level method to run a custom HTTP server to process bank
  * transaction requests using multiple threads. Each request should
  * be processed using a separate detached thread. This method just loops 
@@ -168,25 +179,16 @@ void runServer(tcp::acceptor& server) {
     // operations, write comments, and then implement the methods.
     //
     // First get the base case to be operational. Then you can multithread.
-    
-//    io_service service;
-////    // Create end point
-////    tcp::endpoint myEndpoint(tcp::v4(), port);
-//    // Create a socket that accepts connections
-////    tcp::acceptor server(service, myEndpoint);
-////    std::cout << "Server is listening on port "
-////              << server.local_endpoint().port() << std::endl;
-//    std::cout << "It is running my code here" << std::endl;
-//    // Process client connections one-by-one...forever
-    while (true) {
-        tcp::iostream client;
+
+    // Process client connections one-by-one...forever
+    while (true) {       
+        TcpStreamPtr client = std::make_shared<tcp::iostream>();
         // Wait for a client to connect
-        server.accept(*client.rdbuf());
-        // Process information from client.
-        serveClient(client, client);
+        server.accept(*client->rdbuf());
+        std::thread thr(thrdInit, client);
+        thr.detach();
     }
-//    std::cout << "Run server method was called" << std::endl;
-}
+}  // End of the 'runServer' method
 
 //-------------------------------------------------------------------
 //  DO  NOT   MODIFY  CODE  BELOW  THIS  LINE
@@ -231,8 +233,7 @@ void checkRunClient(const std::string& port);
  * connections from the user and processing each request using
  * multiple threads.
  */
-int main(int argc, char** argv) {
-  
+int main(int argc, char** argv) {  
     // Setup the port number for use by the server
     const int port = (argc > 1 ? std::stoi(argv[1]) : 0);
     io_service service;
