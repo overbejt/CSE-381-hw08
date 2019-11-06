@@ -25,6 +25,8 @@
 // Setup a server socket to accept connections on the socket
 using namespace boost::asio;
 using namespace boost::asio::ip;
+// Create a bank to make reading easier
+std::unordered_map<std::string, double> bank;
 
 
 // Forward declaration for method defined further below
