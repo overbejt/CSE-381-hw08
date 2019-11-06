@@ -39,7 +39,7 @@ void reset(std::ostream& os);
 // parse input method?
 void serveClient(std::istream& is, std::ostream& os);
 void status(std::ostream& os, std::string acctNum);
-void response(std::ostream& os, std::ostream& content, bool err);
+void response(std::ostream& os, std::string& content);
 std::string url_decode(std::string);
 
 /**
@@ -129,6 +129,26 @@ void status(std::ostream& os, std::string acctNum) {
 void serveClient(std::istream& is, std::ostream& os) {
     // Todo: Maybe implement this
     std::cout << "The serveClient method was called" << std::endl;
+    // Read headers from client and print them. This server
+    // does not really process client headers
+    std::string line, getReq;
+    // Read the GET request line.
+    std::getline(is, getReq);
+    // Skip/ignore all the HTTP request & headers for now.
+    while (std::getline(is, line) && (line != "\r") && !line.empty()) {
+    }
+    response(os, line);
+//    os << "Server: BankServer\r\n";
+//    os << "Content-Length: " << line.size() << "\r\n";
+//    os << "Connection: Close\r\n";
+//    os << "Content-Type: text/plain\r\n";
+//    os << "Account " << line << " created";
+//    std::cout << "Server: BankServer\r\n";
+//    std::cout << "Content-Length: " << line.size() << "\r\n";
+//    std::cout << "Connection: Close\r\n";
+//    std::cout << "Content-Type: text/plain\r\n";
+//    std::cout << "Account " << line << " created";
+//    std::cout << line << std::endl;
 }  // End of the 'serveClient' method
 
 
@@ -138,21 +158,12 @@ void serveClient(std::istream& is, std::ostream& os) {
  * @param os Ostream for output.
  * @param contentLength Length of the content.
  */
-void response(std::ostream& os, std::ostream& content, bool err) {
-    if (err) {
-        os << "HTTP/1.1 404 Not Found\r\n";
-    } else {
-        os << "HTTP/1.1 200 OK\r\n";
-    }
+void response(std::ostream& os, std::string& content) {
     os << "Server: BankServer\r\n";
-    // Get the content 
-    std::stringstream ss;
-    ss << content.rdbuf();
-    std::string contentDat = ss.str();
-    os << "Content-Length: " << contentDat.size() << "\r\n";
+    os << "Content-Length: " << content.size() << "\r\n";
     os << "Connection: Close\r\n";
     os << "Content-Type: text/plain\r\n";
-    os << "Account " << contentDat << " created";
+    os << "Account " << content << " created";
 }  // End of the 'header' method
 
 /**
@@ -256,4 +267,3 @@ int main(int argc, char** argv) {
 }
 
 // End of source code
-
