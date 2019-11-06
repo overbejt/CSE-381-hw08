@@ -35,8 +35,9 @@ void credit(std::ostream& os, std::string acctNum, double ammount);
 void debit(std::ostream& os, std::string acctNum, double ammount);
 void reset(std::ostream& os);
 // parse input method?
+void serveClient(std::istream& is, std::ostream& os);
 void status(std::ostream& os, std::string acctNum);
-void response(std::ostream& os, std::string account, bool err);
+void response(std::ostream& os, std::ostream& content, bool err);
 std::string url_decode(std::string);
 
 /**
@@ -117,6 +118,16 @@ void status(std::ostream& os, std::string acctNum) {
     }
 }  // End of the 'status' method
 
+/**
+ * This is a method that will serve the client.  
+ * 
+ * @param is
+ * @param os
+ */
+void serveClient(std::istream& is, std::ostream& os) {
+    // Todo: Maybe implement this
+}  // End of the 'serveClient' method
+
 
 /**
  * This is a method that will printing the header.
@@ -133,7 +144,7 @@ void response(std::ostream& os, std::ostream& content, bool err) {
     os << "Server: BankServer\r\n";
     // Get the content 
     std::stringstream ss;
-    ss << content;
+    ss << content.rdbuf();
     std::string contentDat = ss.str();
     os << "Content-Length: " << contentDat.size() << "\r\n";
     os << "Connection: Close\r\n";
@@ -156,6 +167,22 @@ void runServer(tcp::acceptor& server) {
     // operations, write comments, and then implement the methods.
     //
     // First get the base case to be operational. Then you can multithread.
+    
+//    io_service service;
+////    // Create end point
+////    tcp::endpoint myEndpoint(tcp::v4(), port);
+//    // Create a socket that accepts connections
+//    tcp::acceptor server(service, myEndpoint);
+//    std::cout << "Server is listening on port "
+//              << server.local_endpoint().port() << std::endl;
+//    // Process client connections one-by-one...forever
+//    while (true) {
+//        tcp::iostream client;
+//        // Wait for a client to connect
+//        server.accept(*client.rdbuf());
+//        // Process information from client.
+//        serveClient(client, client);
+//    }
 }
 
 //-------------------------------------------------------------------
