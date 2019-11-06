@@ -38,6 +38,54 @@ std::string status(std::string acctNum);
 void response(std::ostream& os, std::string account, bool err);
 std::string url_decode(std::string);
 
+/**
+ * This method will create a new account.
+ * 
+ * @param acctNum The account number for the new account.
+ */
+void createAcct(std::string acctNum) {
+    
+}  // End of the 'createAcct' method
+
+/**
+ * This is a method that will perform a credit transaction.
+ * 
+ * @param acctNum The account number.
+ * @param ammount The amount to be credited.
+ */
+void credit(std::string acctNum, double ammount) {
+    
+}  // End of the 'credit' method
+
+/**
+ * This is the method that will debit an account.
+ * 
+ * @param acctNum The account number to be debited.
+ * @param ammount The amount to debit the account.
+ */
+void debit(std::string acctNum, double ammount) {
+    
+}  // End of the 'debit' method
+
+
+/**
+ * This is the method that will reset the bank.  
+ */
+void reset() {
+    
+}  // End of the 'reset' method
+
+
+/**
+ * This is the method that will get the status of the indicated bank account.
+ * 
+ * @param acctNum The indicated account number.
+ * @return The balance of the indicated account.
+ */
+std::string status(std::string acctNum) {
+    
+}  // End of the 'status' method
+
 
 /**
  * This is a method that will printing the header.
