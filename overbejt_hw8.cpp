@@ -110,7 +110,7 @@ void status(std::ostream& os, std::string acctNum) {
     std::string balance;
     auto acct = bank.find(acctNum);
     if (acct != bank.end()) {
-        os << "Account " << acctNum;
+        os << "Account " << acctNum << ": $";
         os << std::fixed << std::setprecision(2) 
                 << std::to_string(acct->second);
     }
