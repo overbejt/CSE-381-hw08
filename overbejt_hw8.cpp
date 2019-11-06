@@ -53,12 +53,12 @@ void createAcct(std::string acctNum) {
  * This is a method that will perform a credit transaction.
  * 
  * @param acctNum The account number.
- * @param ammount The amount to be credited.
+ * @param ammount The amount to be added to the account.
  */
 void credit(std::string acctNum, double ammount) {
     auto acct = bank.find(acctNum);
     if (acct != bank.end()) {
-        acct->second = ammount;
+        acct->second += ammount;
     }
 }  // End of the 'credit' method
 
@@ -66,12 +66,12 @@ void credit(std::string acctNum, double ammount) {
  * This is the method that will debit an account.
  * 
  * @param acctNum The account number to be debited.
- * @param ammount The amount to debit the account.
+ * @param ammount The amount to subtract from the account.
  */
 void debit(std::string acctNum, double ammount) {
     auto acct = bank.find(acctNum);
     if (acct != bank.end()) {
-        acct->second = ammount;
+        acct->second -= ammount;
     }
 }  // End of the 'debit' method
 
