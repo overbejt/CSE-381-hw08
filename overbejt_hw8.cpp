@@ -44,7 +44,7 @@ std::string url_decode(std::string);
  * @param acctNum The account number for the new account.
  */
 void createAcct(std::string acctNum) {
-    if (bank.find() != bank.end()) {
+    if (bank.find(acctNum) != bank.end()) {
         bank.insert({acctNum, 0.0});
     }
 }  // End of the 'createAcct' method
@@ -94,7 +94,8 @@ void status(std::ostream& os, std::string acctNum) {
     std::string balance;
     auto acct = bank.find(acctNum);
     if (acct != bank.end()) {
-        os << std::fixed << std::precision(2) << std::to_string(acct->second);
+        os << std::fixed << std::setprecision(2) 
+                << std::to_string(acct->second);
     }
 }  // End of the 'status' method
 
