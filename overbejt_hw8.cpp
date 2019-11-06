@@ -45,7 +45,7 @@ std::string url_decode(std::string);
  */
 void createAcct(std::string acctNum) {
     if (bank.find() != bank.end()) {
-        bank.insert({acctNum : 0.0});
+        bank.insert({acctNum, 0.0});
     }
 }  // End of the 'createAcct' method
 
