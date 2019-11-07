@@ -127,12 +127,13 @@ void status(std::ostream& os, std::string acctNum) {
  * @return transactionType The transaction type from the GET request.
  */
 std::string transactionType(std::string& line) {
-    int splitPoint = -1;
-    splitPoint = line.find("&");
-    std::cout << "SplitPoint: " << std::to_string(splitPoint) << std::endl;
-    std::string transactionType = line.substr(6, splitPoint);
-//    line.erase(splitPoint);
-    return transactionType;
+    std::string args="", transactionType, account, amt;
+    // I'm awesome, and so are lambda expressions
+    std::replace_if(line.begin(), line.end(), 
+            [](char a){return a == '&';}, ' ');
+    std::cout << "After replace: " << line << std::endl;
+    
+    return args;
 }  // End of the 'transactionType' method
 
 /**
