@@ -35,6 +35,8 @@ using TcpStreamPtr = std::shared_ptr<tcp::iostream>;
 void createAcct(std::ostream& os, std::string acctNum);
 void credit(std::ostream& os, std::string acctNum, double ammount);
 void debit(std::ostream& os, std::string acctNum, double ammount);
+void execute(std::ostream& os, std::string input);
+void parseNexec(std::ostream& os, std::string cmd, std::string acct = "N/a", double amt = NAN);
 void reset(std::ostream& os);
 void serveClient(std::istream& is, std::ostream& os);
 void splitInput(std::string& line);
@@ -109,30 +111,18 @@ void execute(std::ostream& os, std::string input) {
     // Extract input       
     if (cmdCnt == 1) {
         ss >> junk1 >> trans;
-        if (trans == "reset") {
-            reset(os);
-        }
+        parseNexec(os, trans);
     }
     if (cmdCnt == 2) {
         ss >> junk1 >> trans >> junk2 >> acct;
-        if (trans == "create") {
-            createAcct(os, acct);
-        }
-        if (trans == "status") {
-            status(os, acct);
-        }        
+        parseNexec(os, trans, acct);
     }
     if (cmdCnt == 3) {
         ss >> junk1 >> trans >> junk2 >> acct >> junk3 >> amt;
-        if (trans == "credit") {
-            double creditAmt = std::stod(amt);
-            credit(os, acct, creditAmt);
-        }
-        if (trans == "debit") {
-            double debitAmt = std::stod(amt);
-            debit(os, acct, debitAmt);
-        }
-    }      
+        double amtNet = std::stod(amt);
+        parseNexec(os, trans, acct, amtNet);
+    }  
+            
 }  // End of the 'execute' method
 
 /**
@@ -144,8 +134,22 @@ void execute(std::ostream& os, std::string input) {
  * @param amt Optional amount.
  */
 void parseNexec(std::ostream& os, std::string cmd, 
-        std::string acct = "N/a", double amt = NaN){
-    // Todo: make the execute method smaller.
+        std::string acct = "N/a", double amt = NAN){
+    if (cmd == "reset") {
+        reset(os);
+    }
+    if (cmd == "create") {
+        createAcct(os, acct);
+    }
+    if (cmd == "status") {
+        status(os, acct);
+    } 
+    if (cmd == "credit") {
+        credit(os, acct, amt);
+    }
+    if (cmd == "debit") {
+        debit(os, acct, amt);
+    }
 }  // End of the 'parseNexec' method
 
 
