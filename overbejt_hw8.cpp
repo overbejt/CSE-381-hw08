@@ -36,8 +36,8 @@ void createAcct(std::ostream& os, std::string acctNum);
 void credit(std::ostream& os, std::string acctNum, double ammount);
 void debit(std::ostream& os, std::string acctNum, double ammount);
 void reset(std::ostream& os);
-// parse input method?
 void serveClient(std::istream& is, std::ostream& os);
+void splitInput(std::string& line);
 void status(std::ostream& os, std::string acctNum);
 void response(std::ostream& os, std::string& content);
 std::string url_decode(std::string);
@@ -121,54 +121,39 @@ void status(std::ostream& os, std::string acctNum) {
 }  // End of the 'status' method
 
 /**
- * This method will get the transaction type.
+ * A method that will split up the input.  
  * 
- * @param line The line from the GET request.
- * @return transactionType The transaction type from the GET request.
+ * @param line The input from the GET method.
  */
-std::string transactionType(std::string& line) {
-    std::string args="";
+void splitInput(std::string& line) {
     // I'm awesome, and so are lambda expressions
     std::replace_if(line.begin(), line.end(), 
             [](char a){return a == '&';}, ' ');
     std::cout << "After replace: " << line << std::endl;
     // Get the number of variables
-    int varCnt = std::count_if(line.begin(), line.end(), 
-            [](char a){return a == '=';});
-    std::cout << "VarCnt: " << std::to_string(varCnt) << std::endl;
+//    int varCnt = std::count_if(line.begin(), line.end(), 
+//            [](char a){return a == '=';});
+//    std::cout << "VarCnt: " << std::to_string(varCnt) << std::endl;
     // Strip out the =
     std::replace_if(line.begin(), line.end(), 
             [](char a){return a == '=';}, ' ');
     
-    // Split the args up
-    std::stringstream ss(line);
-    std::string junk1, junk2, junk3, trans, acct, amt;
-    if (varCnt == 1) {
-        ss >> junk1 >> trans;
-    }
-    if (varCnt == 2) {
-        ss >> junk1 >> trans >> junk2 >> acct;
-    }
-    if (varCnt == 3) {
-        ss >> junk1 >> trans >> junk2 >> acct >> junk3 >> amt;
-    }
-    
-    std::cout << "trans: " << trans << "\nacct: " << acct << "\namt: " << 
-            amt << std::endl;
-    
-    // Concatenate the results
-    
-    return args;
+//    // Split the args up
+//    std::stringstream ss(line);
+//    std::string junk1, junk2, junk3, trans, acct, amt;
+//    if (varCnt == 1) {
+//        ss >> junk1 >> trans;
+//    }
+//    if (varCnt == 2) {
+//        ss >> junk1 >> trans >> junk2 >> acct;
+//    }
+//    if (varCnt == 3) {
+//        ss >> junk1 >> trans >> junk2 >> acct >> junk3 >> amt;
+//    }
+//    
+//    std::cout << "trans: " << trans << "\nacct: " << acct << "\namt: " << 
+//            amt << std::endl;
 }  // End of the 'transactionType' method
-
-/**
- * A method that will get the account name from the GET request.
- * 
- * @param line The line from the GET request.
- * @return 
- */
-std::string acctName(std::string& line) {    
-}  // End of the 'acctName' method
 
 /**
  * This is a method that will serve the client.  
@@ -191,10 +176,9 @@ void serveClient(std::istream& is, std::ostream& os) {
             // Decode the input
             line = url_decode(line);
             std::cout << "Decoded: " << line << std::endl;
-            // Get transactionType
-            // Todo: I can use this to change the line in the way I want!!!
-            std::string transType = transactionType(line);
-            std::cout << "Trans: " << transType << "\nLine: " << line << "\n";
+            // Split the input up
+            splitInput(line);
+            std::cout << "Split Line: " << line << "\n";
             // Get Account Name
             // Get Amount
                             
