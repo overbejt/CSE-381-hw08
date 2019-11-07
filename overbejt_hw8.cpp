@@ -110,7 +110,7 @@ void execute(std::ostream& os, std::string input) {
     if (cmdCnt == 1) {
         ss >> junk1 >> trans;
         if (trans == "reset") {
-            reset();
+            reset(os);
         }
     }
     if (cmdCnt == 2) {
@@ -125,15 +125,28 @@ void execute(std::ostream& os, std::string input) {
     if (cmdCnt == 3) {
         ss >> junk1 >> trans >> junk2 >> acct >> junk3 >> amt;
         if (trans == "credit") {
-            double credit = std::stod(amt);
-            credit(os, acct, credit);
+            double creditAmt = std::stod(amt);
+            credit(os, acct, creditAmt);
         }
         if (trans == "debit") {
-            double debit = std::stod(amt);
-            debit(os, acct, debit);
+            double debitAmt = std::stod(amt);
+            debit(os, acct, debitAmt);
         }
     }      
 }  // End of the 'execute' method
+
+/**
+ * A method that will extract the inputs and execute them.
+ * 
+ * @param os The ostream for outputting to the client.
+ * @param cmd SThe command supplied from the GET method.
+ * @param acct Optional account number.
+ * @param amt Optional amount.
+ */
+void parseNexec(std::ostream& os, std::string cmd, 
+        std::string acct = "N/a", double amt = NaN){
+    // Todo: make the execute method smaller.
+}  // End of the 'parseNexec' method
 
 
 /**
