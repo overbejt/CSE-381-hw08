@@ -179,8 +179,8 @@ void serveClient(std::istream& is, std::ostream& os) {
             // Split the input up
             splitInput(line);
             std::cout << "Split Line: " << line << "\n";
-            // Get Account Name
-            // Get Amount
+            // Execute command
+            
                             
             response(os, idk);                           
         }
