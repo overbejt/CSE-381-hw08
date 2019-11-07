@@ -127,11 +127,36 @@ void status(std::ostream& os, std::string acctNum) {
  * @return transactionType The transaction type from the GET request.
  */
 std::string transactionType(std::string& line) {
-    std::string args="", transactionType, account, amt;
+    std::string args="";
     // I'm awesome, and so are lambda expressions
     std::replace_if(line.begin(), line.end(), 
             [](char a){return a == '&';}, ' ');
     std::cout << "After replace: " << line << std::endl;
+    // Get the number of variables
+    int varCnt = std::count_if(line.begin(), line.end(), 
+            [](char a){return a == '=';});
+    std::cout << "VarCnt: " << std::to_string(varCnt) << std::endl;
+    // Strip out the =
+    std::replace_if(line.begin(), line.end(), 
+            [](char a){return a == '=';}, ' ');
+    
+    // Split the args up
+    std::stringstream ss(line);
+    std::string junk1, junk2, junk3, trans, acct, amt;
+    if (varCnt == 1) {
+        ss >> junk1 >> trans;
+    }
+    if (varCnt == 2) {
+        ss >> junk1 >> trans >> junk2 >> acct;
+    }
+    if (varCnt == 3) {
+        ss >> junk1 >> trans >> junk2 >> acct >> junk3 >> amt;
+    }
+    
+    std::cout << "trans: " << trans << "\nacct: " << acct << "\namt: " << 
+            amt << std::endl;
+    
+    // Concatenate the results
     
     return args;
 }  // End of the 'transactionType' method
