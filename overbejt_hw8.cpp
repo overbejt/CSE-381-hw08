@@ -129,22 +129,19 @@ void status(std::ostream& os, std::string acctNum) {
 void serveClient(std::istream& is, std::ostream& os) {
     // Todo: Maybe implement this
     std::cout << "The serveClient method was called" << std::endl;
-     // 1.) Make sure Input starts with "GET /cgi-bin/exec"
+     // 1.) Make sure Input starts with "GET /TransactionInfo"
     for (std::string line; getline(is, line);) {
-        if (line.find("GET") != std::string::npos) {
-            if (line.substr(0, 20) == "GET /TransactionInfo") {
-                line = line.substr(21);
-                // Print the header out
-                std::string idk = "It reached the response method";
-                response(os, idk);
+        if (line.find("GET") != std::string::npos) {            
+//                line = line.substr(21);
+            std::cout << "Line: " << line << std::endl;
+            // Print the header out
+            std::string idk = "It reached the response method";
+            // Decode the input
                 
-            } else {
-                // Print the header out
-                std::string idk = "IDK";
-                response(os, idk);
-                // Print the error message out
-//                printErr(os, line);
-            }
+            // Split the input
+            // Parse input
+                
+            response(os, idk);                           
         }
     }
 }  // End of the 'serveClient' method
