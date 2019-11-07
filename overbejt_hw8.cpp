@@ -121,6 +121,30 @@ void status(std::ostream& os, std::string acctNum) {
 }  // End of the 'status' method
 
 /**
+ * This method will get the transaction type.
+ * 
+ * @param line The line from the GET request.
+ * @return transactionType The transaction type from the GET request.
+ */
+std::string transactionType(std::string& line) {
+    int splitPoint = -1;
+    splitPoint = line.find("&");
+    std::cout << "SplitPoint: " << std::to_string(splitPoint) << std::endl;
+    std::string transactionType = line.substr(6, splitPoint);
+//    line.erase(splitPoint);
+    return transactionType;
+}  // End of the 'transactionType' method
+
+/**
+ * A method that will get the account name from the GET request.
+ * 
+ * @param line The line from the GET request.
+ * @return 
+ */
+std::string acctName(std::string& line) {    
+}  // End of the 'acctName' method
+
+/**
  * This is a method that will serve the client.  
  * 
  * @param is
@@ -139,10 +163,14 @@ void serveClient(std::istream& is, std::ostream& os) {
             // Print the header out
             std::string idk = "It reached the response method";
             // Decode the input
-                
-            // Split the input
-            // Parse input
-                
+            line = url_decode(line);
+            std::cout << "Decoded: " << line << std::endl;
+            // Get transactionType
+            std::string transType = transactionType(line);
+            std::cout << "Trans: " << transType << "\nLine: " << line << "\n";
+            // Get Account Name
+            // Get Amount
+                            
             response(os, idk);                           
         }
     }
@@ -196,11 +224,13 @@ void runServer(tcp::acceptor& server) {
 
     // Process client connections one-by-one...forever
     while (true) {       
-        TcpStreamPtr client = std::make_shared<tcp::iostream>();
+//        TcpStreamPtr client = std::make_shared<tcp::iostream>();
+        tcp::iostream client;
         // Wait for a client to connect
-        server.accept(*client->rdbuf());
-        std::thread thr(thrdInit, client);
-        thr.detach();
+        server.accept(*client.rdbuf());
+        serveClient(client, client);
+//        std::thread thr(thrdInit, client);
+//        thr.detach();
     }
 }  // End of the 'runServer' method
 
