@@ -131,9 +131,11 @@ void serveClient(std::istream& is, std::ostream& os) {
     std::cout << "The serveClient method was called" << std::endl;
      // 1.) Make sure Input starts with "GET /TransactionInfo"
     for (std::string line; getline(is, line);) {
-        if (line.find("GET") != std::string::npos) {            
-//                line = line.substr(21);
+        if (line.find("GET") != std::string::npos) {                
             std::cout << "Line: " << line << std::endl;
+            line = line.erase(0, 5);
+            line = line.erase(line.size() - 10);
+            std::cout << "subStr: " << line << std::endl;
             // Print the header out
             std::string idk = "It reached the response method";
             // Decode the input
