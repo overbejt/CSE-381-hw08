@@ -94,6 +94,30 @@ void debit(std::ostream& os, std::string acctNum, double ammount) {
     os << output;
 }  // End of the 'debit' method
 
+/**
+ * A method that will parse the input and execute the transaction.  
+ * 
+ * @param input The input supplied from the GET request.
+ */
+void execute(std::string input) {
+    std::stringstream ss(input);
+    std::string junk1, junk2, junk3, trans, acct, amt;
+    
+    // Get the number of commands
+    int cmdCnt = std::count_if(input.begin(), input.end(), 
+            [](char a){return a == ' ';});
+           
+    if (cmdCnt == 1) {
+        ss >> junk1 >> trans;
+    }
+    if (cmdCnt == 2) {
+        ss >> junk1 >> trans >> junk2 >> acct;
+    }
+    if (cmdCnt == 3) {
+        ss >> junk1 >> trans >> junk2 >> acct >> junk3 >> amt;
+    }
+}  // End of the 'execute' method
+
 
 /**
  * This is the method that will reset the bank.  
