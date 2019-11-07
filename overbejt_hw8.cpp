@@ -192,6 +192,7 @@ void serveClient(std::istream& is, std::ostream& os) {
             line = url_decode(line);
             std::cout << "Decoded: " << line << std::endl;
             // Get transactionType
+            // Todo: I can use this to change the line in the way I want!!!
             std::string transType = transactionType(line);
             std::cout << "Trans: " << transType << "\nLine: " << line << "\n";
             // Get Account Name
