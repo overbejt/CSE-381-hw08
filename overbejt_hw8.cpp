@@ -99,23 +99,40 @@ void debit(std::ostream& os, std::string acctNum, double ammount) {
  * 
  * @param input The input supplied from the GET request.
  */
-void execute(std::string input) {
+void execute(std::ostream& os, std::string input) {
     std::stringstream ss(input);
     std::string junk1, junk2, junk3, trans, acct, amt;
     
     // Get the number of commands
     int cmdCnt = std::count_if(input.begin(), input.end(), 
             [](char a){return a == ' ';});
-           
+    // Extract input       
     if (cmdCnt == 1) {
         ss >> junk1 >> trans;
+        if (trans == "reset") {
+            reset();
+        }
     }
     if (cmdCnt == 2) {
         ss >> junk1 >> trans >> junk2 >> acct;
+        if (trans == "create") {
+            createAcct(os, acct);
+        }
+        if (trans == "status") {
+            status(os, acct);
+        }        
     }
     if (cmdCnt == 3) {
         ss >> junk1 >> trans >> junk2 >> acct >> junk3 >> amt;
-    }
+        if (trans == "credit") {
+            double credit = std::stod(amt);
+            credit(os, acct, credit);
+        }
+        if (trans == "debit") {
+            double debit = std::stod(amt);
+            debit(os, acct, debit);
+        }
+    }      
 }  // End of the 'execute' method
 
 
