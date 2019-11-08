@@ -32,15 +32,16 @@ using TcpStreamPtr = std::shared_ptr<tcp::iostream>;
 
 
 // Forward declaration for method defined further below
-void createAcct(std::ostream& os, std::string acctNum);
-void credit(std::ostream& os, std::string acctNum, double ammount);
-void debit(std::ostream& os, std::string acctNum, double ammount);
+std::string createAcct(std::string acctNum);
+std::string credit(std::string acctNum, double ammount);
+std::string debit(std::string acctNum, double ammount);
 void execute(std::ostream& os, std::string input);
-void parseNexec(std::ostream& os, std::string cmd, std::string acct = "N/a", double amt = NAN);
-void reset(std::ostream& os);
+void parseNexec(std::ostream& os, std::string cmd, 
+        std::string acct = "N/a", double amt = NAN);
+std::string reset();
 void serveClient(std::istream& is, std::ostream& os);
 void splitInput(std::string& line);
-void status(std::ostream& os, std::string acctNum);
+std::string status(std::string acctNum);
 void response(std::ostream& os, std::string& content);
 std::string url_decode(std::string);
 
@@ -49,15 +50,15 @@ std::string url_decode(std::string);
  * 
  * @param acctNum The account number for the new account.
  */
-void createAcct(std::ostream& os, std::string acctNum) {
-    std::string output;
+std::string createAcct(std::ostream& os, std::string acctNum) {
+    std::stringstream output;
     if (bank.find(acctNum) == bank.end()) {
         bank.insert({acctNum, 0.0});
-        output = "Account " + acctNum + " created";
+        output << "Account " << acctNum << " created";
     } else {
-        output = "Account " + acctNum + " already exists";
+        output << "Account " << acctNum << " already exists";
     }
-    os << output;
+    return output.str();
 }  // End of the 'createAcct' method
 
 /**
@@ -66,16 +67,16 @@ void createAcct(std::ostream& os, std::string acctNum) {
  * @param acctNum The account number.
  * @param ammount The amount to be added to the account.
  */
-void credit(std::ostream& os, std::string acctNum, double ammount) {
+std::string credit(std::string acctNum, double ammount) {
     auto acct = bank.find(acctNum);
-    std::string output;
+    std::stringstream output;
     if (acct != bank.end()) {
         acct->second += ammount;
-        output =  "Account balance updated";
+        output <<  "Account balance updated";
     } else {
-        output = "Account not found";
+        output << "Account not found";
     }
-    os << output;
+    return output.str();
 }  // End of the 'credit' method
 
 /**
@@ -84,16 +85,17 @@ void credit(std::ostream& os, std::string acctNum, double ammount) {
  * @param acctNum The account number to be debited.
  * @param ammount The amount to subtract from the account.
  */
-void debit(std::ostream& os, std::string acctNum, double ammount) {
+std::string debit(std::string acctNum, double ammount) {
     auto acct = bank.find(acctNum);
+    std::stringstream response;
     std::string output;
     if (acct != bank.end()) {
         acct->second -= ammount;
-        output = "Account balance updated";
+        response << "Account balance updated";
     } else {
-        output = "Account not found";
+        response << "Account not found";
     }
-    os << output;
+    return response.str();
 }  // End of the 'debit' method
 
 /**
@@ -101,7 +103,7 @@ void debit(std::ostream& os, std::string acctNum, double ammount) {
  * 
  * @param input The input supplied from the GET request.
  */
-void execute(std::ostream& os, std::string input) {
+void execute(std::ostream& os, std::string& input) {
     std::stringstream ss(input);
     std::string junk1, junk2, junk3, trans, acct, amt;
     
@@ -121,8 +123,7 @@ void execute(std::ostream& os, std::string input) {
         ss >> junk1 >> trans >> junk2 >> acct >> junk3 >> amt;
         double amtNet = std::stod(amt);
         parseNexec(os, trans, acct, amtNet);
-    }  
-            
+    }             
 }  // End of the 'execute' method
 
 /**
@@ -134,31 +135,34 @@ void execute(std::ostream& os, std::string input) {
  * @param amt Optional amount.
  */
 void parseNexec(std::ostream& os, std::string cmd, 
-        std::string acct = "N/a", double amt = NAN){
+        std::string acct, double amt) {
+    std::string responseTxt;
     if (cmd == "reset") {
-        reset(os);
+        responseTxt = reset();
     }
     if (cmd == "create") {
-        createAcct(os, acct);
+        responseTxt = createAcct(os, acct);
     }
     if (cmd == "status") {
-        status(os, acct);
+        responseTxt = status(acct);
     } 
     if (cmd == "credit") {
-        credit(os, acct, amt);
+        responseTxt = credit(acct, amt);
     }
     if (cmd == "debit") {
-        debit(os, acct, amt);
+        responseTxt = debit(acct, amt);
     }
+    // Output the response
+    response(os, responseTxt);
 }  // End of the 'parseNexec' method
 
 
 /**
  * This is the method that will reset the bank.  
  */
-void reset(std::ostream& os) {
+std::string reset() {
     bank.clear();
-    os << "All accounts reset";
+    return "All accounts reset";
 }  // End of the 'reset' method
 
 
@@ -168,14 +172,15 @@ void reset(std::ostream& os) {
  * @param acctNum The indicated account number.
  * @return The balance of the indicated account.
  */
-void status(std::ostream& os, std::string acctNum) {
-    std::string balance;
+std::string status(std::string acctNum) {
+    std::stringstream ss;
     auto acct = bank.find(acctNum);
     if (acct != bank.end()) {
-        os << "Account " << acctNum << ": $";
-        os << std::fixed << std::setprecision(2) 
-                << std::to_string(acct->second);
+        ss << "Account " << acctNum << ": $";
+        ss << std::fixed << std::setprecision(2) 
+                << std::to_string(acct->second);    
     }
+    return ss.str();
 }  // End of the 'status' method
 
 /**
@@ -238,9 +243,7 @@ void serveClient(std::istream& is, std::ostream& os) {
             splitInput(line);
             std::cout << "Split Line: " << line << "\n";
             // Execute command
-            
-                            
-            response(os, idk);                           
+            parseNexec(os, line);                         
         }
     }
 }  // End of the 'serveClient' method
