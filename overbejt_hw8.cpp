@@ -35,7 +35,7 @@ using TcpStreamPtr = std::shared_ptr<tcp::iostream>;
 std::string createAcct(std::string acctNum);
 std::string credit(std::string acctNum, double ammount);
 std::string debit(std::string acctNum, double ammount);
-void execute(std::ostream& os, std::string input);
+// void exec(std::ostream& os, std::string input);
 void parseNexec(std::ostream& os, std::string cmd, 
         std::string acct = "N/a", double amt = NAN);
 std::string reset();
@@ -111,7 +111,8 @@ void exec(std::ostream& os, std::string& input) {
     // Get the number of commands
     int cmdCnt = std::count_if(input.begin(), input.end(), 
             [](char a){return a == ' ';});
-    cmdCnt -= 1;
+    cmdCnt = cmdCnt == 1 ? cmdCnt : cmdCnt - 1;
+    std::cout << "Input: " << input << '\n';
     std::cout << "CmdCnt: " << cmdCnt << "\n";
     // Extract input       
     if (cmdCnt == 1) {
