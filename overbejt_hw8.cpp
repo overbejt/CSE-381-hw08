@@ -50,8 +50,9 @@ std::string url_decode(std::string);
  * 
  * @param acctNum The account number for the new account.
  */
-std::string createAcct(std::ostream& os, std::string acctNum) {
+std::string createAcct(std::string acctNum) {
     std::stringstream output;
+    std::cout << "Account Num: " << acctNum << "\n";
     if (bank.find(acctNum) == bank.end()) {
         bank.insert({acctNum, 0.0});
         output << "Account " << acctNum << " created";
@@ -103,25 +104,30 @@ std::string debit(std::string acctNum, double ammount) {
  * 
  * @param input The input supplied from the GET request.
  */
-void execute(std::ostream& os, std::string& input) {
+void exec(std::ostream& os, std::string& input) {
     std::stringstream ss(input);
     std::string junk1, junk2, junk3, trans, acct, amt;
     
     // Get the number of commands
     int cmdCnt = std::count_if(input.begin(), input.end(), 
             [](char a){return a == ' ';});
+    cmdCnt -= 1;
+    std::cout << "CmdCnt: " << cmdCnt << "\n";
     // Extract input       
     if (cmdCnt == 1) {
         ss >> junk1 >> trans;
-        parseNexec(os, trans);
+        std::cout << "args: " << trans << "\n";
+        parseNexec(os, trans);        
     }
     if (cmdCnt == 2) {
         ss >> junk1 >> trans >> junk2 >> acct;
-        parseNexec(os, trans, acct);
+        std::cout << "args: " << trans << "\t:" << acct << "\n";
+        parseNexec(os, trans, acct);        
     }
     if (cmdCnt == 3) {
         ss >> junk1 >> trans >> junk2 >> acct >> junk3 >> amt;
         double amtNet = std::stod(amt);
+        std::cout << "args: " << trans << "\t:" << acct << "\t:" << amt << "\n";
         parseNexec(os, trans, acct, amtNet);
     }             
 }  // End of the 'execute' method
@@ -141,7 +147,7 @@ void parseNexec(std::ostream& os, std::string cmd,
         responseTxt = reset();
     }
     if (cmd == "create") {
-        responseTxt = createAcct(os, acct);
+        responseTxt = createAcct(acct);
     }
     if (cmd == "status") {
         responseTxt = status(acct);
@@ -225,25 +231,17 @@ void splitInput(std::string& line) {
  * @param os
  */
 void serveClient(std::istream& is, std::ostream& os) {
-    // Todo: Maybe implement this
-    std::cout << "The serveClient method was called" << std::endl;
      // 1.) Make sure Input starts with "GET /TransactionInfo"
     for (std::string line; getline(is, line);) {
-        if (line.find("GET") != std::string::npos) {                
-            std::cout << "Line: " << line << std::endl;
+        if (line.find("GET") != std::string::npos) {
             line = line.erase(0, 5);
             line = line.erase(line.size() - 10);
-            std::cout << "subStr: " << line << std::endl;
-            // Print the header out
-            std::string idk = "It reached the response method";
             // Decode the input
             line = url_decode(line);
-            std::cout << "Decoded: " << line << std::endl;
             // Split the input up
             splitInput(line);
-            std::cout << "Split Line: " << line << "\n";
             // Execute command
-            parseNexec(os, line);                         
+            exec(os, line);                         
         }
     }
 }  // End of the 'serveClient' method
@@ -256,17 +254,13 @@ void serveClient(std::istream& is, std::ostream& os) {
  * @param contentLength Length of the content.
  */
 void response(std::ostream& os, std::string& content) {
-//    if (err) {
-//        os << "HTTP/1.1 200 OK\r\n";
-//    } else {
-//        os << "HTTP/1.1 404 "
-//    }
+    std::cout << "Content: " << content << "\n";
     os << "HTTP/1.1 200 OK\r\n";
     os << "Server: BankServer\r\n";
     os << "Content-Length: " << content.size() << "\r\n";
     os << "Connection: Close\r\n";
-    os << "Content-Type: text/plain\r\n";
-    os << "Account " << content << " created";
+    os << "Content-Type: text/plain\r\n\r\n";
+    os << content;
 }  // End of the 'header' method
 
 /**
