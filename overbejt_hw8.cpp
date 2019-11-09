@@ -52,7 +52,6 @@ std::string url_decode(std::string);
  */
 std::string createAcct(std::string acctNum) {
     std::stringstream output;
-    std::cout << "Account Num: " << acctNum << "\n";
     if (bank.find(acctNum) == bank.end()) {
         bank.insert({acctNum, 0.0});
         output << "Account " << acctNum << " created";
@@ -112,23 +111,18 @@ void exec(std::ostream& os, std::string& input) {
     int cmdCnt = std::count_if(input.begin(), input.end(), 
             [](char a){return a == ' ';});
     cmdCnt = cmdCnt == 1 ? cmdCnt : cmdCnt - 1;
-    std::cout << "Input: " << input << '\n';
-    std::cout << "CmdCnt: " << cmdCnt << "\n";
     // Extract input       
     if (cmdCnt == 1) {
         ss >> junk1 >> trans;
-        std::cout << "args: " << trans << "\n";
         parseNexec(os, trans);        
     }
     if (cmdCnt == 2) {
         ss >> junk1 >> trans >> junk2 >> acct;
-        std::cout << "args: " << trans << "\t:" << acct << "\n";
         parseNexec(os, trans, acct);        
     }
     if (cmdCnt > 3) {
         ss >> junk1 >> trans >> junk2 >> acct >> junk3 >> amt;
         double amtNet = std::stod(amt);
-        std::cout << "args: " << trans << "\t:" << acct << "\t:" << amt << "\n";
         parseNexec(os, trans, acct, amtNet);
     }             
 }  // End of the 'execute' method
@@ -200,30 +194,9 @@ void splitInput(std::string& line) {
     // I'm awesome, and so are lambda expressions
     std::replace_if(line.begin(), line.end(), 
             [](char a){return a == '&';}, ' ');
-    std::cout << "After replace: " << line << std::endl;
-    // Get the number of variables
-//    int varCnt = std::count_if(line.begin(), line.end(), 
-//            [](char a){return a == '=';});
-//    std::cout << "VarCnt: " << std::to_string(varCnt) << std::endl;
     // Strip out the =
     std::replace_if(line.begin(), line.end(), 
             [](char a){return a == '=';}, ' ');
-    
-//    // Split the args up
-//    std::stringstream ss(line);
-//    std::string junk1, junk2, junk3, trans, acct, amt;
-//    if (varCnt == 1) {
-//        ss >> junk1 >> trans;
-//    }
-//    if (varCnt == 2) {
-//        ss >> junk1 >> trans >> junk2 >> acct;
-//    }
-//    if (varCnt == 3) {
-//        ss >> junk1 >> trans >> junk2 >> acct >> junk3 >> amt;
-//    }
-//    
-//    std::cout << "trans: " << trans << "\nacct: " << acct << "\namt: " << 
-//            amt << std::endl;
 }  // End of the 'transactionType' method
 
 /**
@@ -256,7 +229,6 @@ void serveClient(std::istream& is, std::ostream& os) {
  * @param contentLength Length of the content.
  */
 void response(std::ostream& os, std::string& content) {
-    std::cout << "Content: " << content << "\n";
     os << "HTTP/1.1 200 OK\r\n";
     os << "Server: BankServer\r\n";
     os << "Content-Length: " << content.size() << "\r\n";
@@ -284,12 +256,6 @@ void thrdInit(TcpStreamPtr stream) {
  * connections from various clients.
  */
 void runServer(tcp::acceptor& server) {
-    // Implement this method to meet the requirements of the homework.
-    // Needless to say first you should create stubs for the various 
-    // operations, write comments, and then implement the methods.
-    //
-    // First get the base case to be operational. Then you can multithread.
-
     // Process client connections one-by-one...forever
     while (true) {       
 //        TcpStreamPtr client = std::make_shared<tcp::iostream>();
@@ -297,8 +263,6 @@ void runServer(tcp::acceptor& server) {
         // Wait for a client to connect
         server.accept(*client.rdbuf());
         serveClient(client, client);
-//        std::thread thr(thrdInit, client);
-//        thr.detach();
     }
 }  // End of the 'runServer' method
 
