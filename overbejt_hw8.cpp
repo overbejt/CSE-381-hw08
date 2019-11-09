@@ -183,9 +183,10 @@ std::string status(std::string acctNum) {
     std::stringstream ss;
     auto acct = bank.find(acctNum);
     if (acct != bank.end()) {
-        ss << "Account " << acctNum << ": $";
-        ss << std::fixed << std::setprecision(2) 
-                << std::to_string(acct->second);    
+        ss << "Account " << acctNum << ": $";       
+        ss << std::fixed << std::setprecision(2) << acct->second;    
+    } else {
+        ss << "Account not found";
     }
     return ss.str();
 }  // End of the 'status' method
