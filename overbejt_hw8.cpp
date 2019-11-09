@@ -125,7 +125,7 @@ void exec(std::ostream& os, std::string& input) {
         std::cout << "args: " << trans << "\t:" << acct << "\n";
         parseNexec(os, trans, acct);        
     }
-    if (cmdCnt == 3) {
+    if (cmdCnt > 3) {
         ss >> junk1 >> trans >> junk2 >> acct >> junk3 >> amt;
         double amtNet = std::stod(amt);
         std::cout << "args: " << trans << "\t:" << acct << "\t:" << amt << "\n";
